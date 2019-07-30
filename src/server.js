@@ -7,7 +7,7 @@ mongoose.connect('mongodb+srv://doge:doge@cluster0-iivj7.mongodb.net/test?retryW
   useNewUrlParser: true,
 });
 
-const options = { port: 4000 }
+const options = { port: normalizePort(process.env.PORT || '4000'); }
 
 const server = new GraphQLServer({
   typeDefs,
