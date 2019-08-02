@@ -17,5 +17,4 @@ type User {
 
 type AuthPayload {
   token: String!
-  user: User!
 }
