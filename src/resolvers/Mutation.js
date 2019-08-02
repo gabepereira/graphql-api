@@ -3,30 +3,24 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const Mutation = {
-    createUser: (_, { name, email, password }) => {
-        password = md5(password + process.env.SALT_KEY);
-        return User.create({ name, email, password });
-    },
-	auth: (_, { email, password }) => {
-		const user = User.findOne({
-			email: email,
-			password: md5(password + process.env.SALT_KEY)
-		}); 
+    createUser: (_, { name, email, password }) => User.create({
+		name, email, password: md5(password + process.env.SALT_KEY)
+	}),
+		
+	auth: async(_, { email, password }) => {
+		const user = await User.findOne({
+			email, password: md5(password + process.env.SALT_KEY)
+		});
 
-		if (!user) return;
+		console.log(user);
 
-		const data = {
-            id: user._id,
-            email: user.email,
-            name: user.name
-		};
-        
-        console.log(process.env.JWT_SECRET);
-
-		return {
-            token: jwt.sign(data, process.env.SALT_KEY),
-            user
-		}
+		return user ? {
+            token: jwt.sign({
+				id: user._id,
+				email: user.email,
+				name: user.name
+			}, process.env.SALT_KEY, { expiresIn: '1d' })
+		} : false;
 	},
 };
 

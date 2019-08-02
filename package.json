@@ -1,10 +1,13 @@
 {
   "name": "graphql-api",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A basic GraphQL API",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "major": "npm version major && git push",
+    "minor": "npm version minor && git push",
+    "patch": "npm version patch && git push"
   },
   "keywords": [
     "GraphQL"
