@@ -1,6 +1,8 @@
+require('dotenv').config();
+
 const { GraphQLServer } = require('graphql-yoga');
 const typeDefs = require('./typeDefs');
-const resolvers = require('./resolvers');
+const resolvers = require('./resolvers')
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb+srv://doge:doge@cluster0-iivj7.mongodb.net/test?retryWrites=true&w=majority',{
