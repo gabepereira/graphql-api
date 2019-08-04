@@ -1,17 +1,12 @@
-const auth = require('./auth');
+const policies = require('./permissions');
+const permissions = require('./permissions');
+const token = require('./token');
 
-const Token = auth.Token;
-
-const Policies = Object.assign(
-    auth.Policies
-);
-
-const Permissions = Object.assign(
-	auth.Permissions
-);
+const Policies = Object.assign(policies);
+const Permissions = Object.assign(permissions);
 
 module.exports = {
-    Token,
     Policies,
-    Permissions
+    Permissions,
+    token
 };
