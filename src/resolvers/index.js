@@ -1,10 +1,15 @@
-// const { Query } = require('./Query')
-// const { auth } = require('./Mutation/auth')
-// const { post } = require('./Mutation/post')
-// const { Subscription } = require('./Subscription')
-const Query = require('./Query');
-const Mutation = require('./Mutation');
-// const { Post } = require('./Post')
+const user = require('./User');
+const product = require('./Product');
+
+const Query = Object.assign(
+	user.Query,
+	product.Query
+);
+
+const Mutation = Object.assign(
+	user.Mutation,
+	product.Mutation
+);
 
 module.exports = {
   Query,

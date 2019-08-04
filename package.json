@@ -1,6 +1,6 @@
 {
   "name": "graphql-api",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A basic GraphQL API",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.0.0",
+    "graphql-shield": "^6.0.4",
     "graphql-yoga": "^1.18.1",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
