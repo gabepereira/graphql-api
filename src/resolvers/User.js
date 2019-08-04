@@ -2,6 +2,11 @@ const md5 = require('md5');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const Query = {
+    user: (_, { id }) => User.findById(id),
+    users: () => User.find(),
+};
+
 const Mutation = {
     createUser: (_, { name, email, password }) => User.create({
 		name, email, password: md5(password + process.env.SALT_KEY)
@@ -17,9 +22,12 @@ const Mutation = {
 				id: user._id,
 				email: user.email,
 				name: user.name
-			}, process.env.SALT_KEY, { expiresIn: '1d' })
+			}, process.env.JWT_SECRET, { expiresIn: '1d' })
 		} : new Error('No user found.');
 	},
 };
 
-module.exports = Mutation;
+module.exports = {
+	Query,
+	Mutation
+}

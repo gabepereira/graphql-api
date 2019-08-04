@@ -1,11 +1,16 @@
 type Query {
   user(id: ID!): User!
   users: [User!]!
+  
+  product(id: ID!): Product!
+  products: [Product!]!
 }
 
 type Mutation {
   createUser(name: String!, email: String!, password: String!): User
   auth(email: String!, password: String!): AuthPayload!
+
+  createProduct(title: String!, description: String!, price: Int!): Product
 }
 
 type User {
@@ -13,6 +18,13 @@ type User {
   name: String!
   email: String!
   password: String!
+}
+
+type Product {
+  id: ID!
+  title: String!
+  description: String!
+  price: Int!
 }
 
 type AuthPayload {
