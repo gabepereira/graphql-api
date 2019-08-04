@@ -8,9 +8,19 @@ const Query = {
 };
 
 const Mutation = {
-    createUser: (_, { name, email, password }) => User.create({
-		name, email, password: md5(password + process.env.SALT_KEY)
-	}),
+    createUser: (_, { name, email, password }) => {
+		const user = User.create({
+			name, email,
+			password: md5(password + process.env.SALT_KEY),
+			role: 'user'
+		});
+		return user ? user : new Error('Cannot create user.');
+	},
+
+	deleteUser: async(_, { id }) => {
+		const user = await User.findByIdAndRemove(id);
+		return user ? user : new Error('No user found.');
+	},
 
 	auth: async(_, { email, password }) => {
 		const user = await User.findOne({
@@ -19,9 +29,9 @@ const Mutation = {
 		
 		return user ? {
             token: jwt.sign({
-				id: user._id,
-				email: user.email,
-				name: user.name
+				id: user.id,
+				name: user.name,
+				role: user.role
 			}, process.env.JWT_SECRET, { expiresIn: '1d' })
 		} : new Error('No user found.');
 	},
