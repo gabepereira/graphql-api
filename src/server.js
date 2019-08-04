@@ -9,6 +9,7 @@ mongoose.connect(
   'mongodb+srv://' + process.env.MONGO_NAME + ':' + process.env.MONGO_PASS +
   '@cluster0-iivj7.mongodb.net/test?retryWrites=true&w=majority', {
   useNewUrlParser: true,
+  useFindAndModify: false
 });
 
 const options = { port: process.env.PORT || '4000' }

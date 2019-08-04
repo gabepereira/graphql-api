@@ -9,6 +9,11 @@ const Mutation = {
     createProduct: (_, { title, description, price }) => Product.create({
         title, description, price, active: true
     }),
+
+    deleteProduct: async(_, { id }) => {
+        const product = await Product.findByIdAndRemove(id);
+        return product ? product : new Error('No product found.')
+	},
 };
 
 module.exports = {

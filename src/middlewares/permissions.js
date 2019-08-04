@@ -7,7 +7,7 @@ module.exports = permissions = shield({
             policies.auth, policies.admin
         ),
         users: and(
-            policies.auth, policies.admin
+            policies.auth,
         ),
     },
 
@@ -18,5 +18,8 @@ module.exports = permissions = shield({
         deleteUser: and(
             policies.auth, policies.admin
         ),
+        createProduct: and(
+            policies.auth, policies.admin
+        )
     }
 });
