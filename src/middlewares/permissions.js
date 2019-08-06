@@ -7,6 +7,12 @@ module.exports = permissions = shield({
             policies.auth, policies.admin
         ),
         users: and(
+            policies.auth, policies.admin
+        ),
+        product: and(
+            policies.auth
+        ),
+        products: and(
             policies.auth,
         ),
     },
@@ -20,6 +26,9 @@ module.exports = permissions = shield({
         ),
         createProduct: and(
             policies.auth, policies.admin
+        ),
+        addProductToCart: and(
+            policies.auth
         )
     }
 });

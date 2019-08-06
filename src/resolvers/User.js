@@ -1,6 +1,7 @@
 const md5 = require('md5');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Product = require('../models/Product');
 
 const Query = {
     user: (_, { id }) => User.findById(id),
@@ -12,7 +13,8 @@ const Mutation = {
 		const user = User.create({
 			name, email,
 			password: md5(password + process.env.SALT_KEY),
-			role: 'user'
+			role: 'user',
+			cart: []
 		});
 		return user ? user : new Error('Cannot create user.');
 	},
@@ -20,6 +22,15 @@ const Mutation = {
 	deleteUser: async(_, { id }) => {
 		const user = await User.findByIdAndRemove(id);
 		return user ? user : new Error('No user found.');
+	},
+
+	addProductToCart: async(_, { productId, quantity }, ctx, info) => {
+		const product = await Product.findById(productId);
+		product ? await User.updateOne({ _id: ctx.token.id }, {
+			$push: { cart: [{
+				product: productId, quantity
+			}]}
+		}) : new Error('Product not found.');
 	},
 
 	auth: async(_, { email, password }) => {
