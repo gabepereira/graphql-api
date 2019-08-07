@@ -7,7 +7,7 @@ const Query = {
 
 const Mutation = {
     createProduct: (_, { title, description, price }) => Product.create({
-        title, description, price, active: true
+        title, description, price, active: true, status: true
     }),
 
     deleteProduct: async(_, { id }) => {

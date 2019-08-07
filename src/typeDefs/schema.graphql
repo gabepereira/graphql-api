@@ -4,6 +4,9 @@ type Query {
   
   product(id: ID!): Product!
   products: [Product!]!
+
+  sale(id: ID!): Sale!
+  sales: [Sale!]!
 }
 
 type Mutation {
@@ -11,10 +14,11 @@ type Mutation {
 
   createUser(name: String!, email: String!, password: String!): User
   deleteUser(id: ID!): User!
-  addProductToCart(productId: ID!, quantity: Int!): String
   
   createProduct(title: String!, description: String!, price: Int!): Product
   deleteProduct(id: ID!): Product!
+
+  createSale(productId: ID!, quantity: Int!): Sale
 }
 
 type User {
@@ -31,6 +35,20 @@ type Product {
   title: String!
   description: String!
   price: Int!
+  status: Boolean!
+}
+
+type Sale {
+  id: ID!
+  user: User!
+  status: Boolean!
+  items: [SaleItem!]
+}
+
+type SaleItem {
+  id: ID!
+  product: ID!
+  quantity: Int!
 }
 
 type AuthPayload {

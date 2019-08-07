@@ -24,15 +24,6 @@ const Mutation = {
 		return user ? user : new Error('No user found.');
 	},
 
-	addProductToCart: async(_, { productId, quantity }, ctx, info) => {
-		const product = await Product.findById(productId);
-		product ? await User.updateOne({ _id: ctx.token.id }, {
-			$push: { cart: [{
-				product: productId, quantity
-			}]}
-		}) : new Error('Product not found.');
-	},
-
 	auth: async(_, { email, password }) => {
 		const user = await User.findOne({
 			email, password: md5(password + process.env.SALT_KEY)
