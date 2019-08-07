@@ -27,7 +27,6 @@ type User {
   email: String!
   password: String!
   role: String!
-  cart: [Product!]
 }
 
 type Product {
@@ -47,7 +46,7 @@ type Sale {
 
 type SaleItem {
   id: ID!
-  product: ID!
+  product: Product!
   quantity: Int!
 }
 
