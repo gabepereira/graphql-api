@@ -28,7 +28,7 @@ module.exports = permissions = shield({
             policies.auth, policies.admin
         ),
         createSale: and(
-            policies.auth, policies.admin
+            policies.auth
         )
     }
 });

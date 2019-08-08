@@ -1,4 +1,5 @@
 const Sale = require('../models/Sale');
+const Product = require('../models/Product');
 
 const Query = {
     sales: async(_, {}) => Sale.findById(id),
@@ -13,20 +14,53 @@ const Query = {
 
 const Mutation = {
     createSale: async(_, { productId, quantity }, ctx, info) => {
-        let sale = await Sale.create({
+        let product = await Product.findById(productId);
+        if (!product) throw new Error('Product not found');
+        console.log(productId);
+        let userSale = await Sale.findOne({
             user: ctx.token.id,
             status: true,
-            items: {
-                product: productId,
-                quantity
-            }
+        }, {
+            items: [{
+                $elemMatch: {
+                    product: {
+                        $exists: productId
+                    }
+                }
+            }]
         });
-        sale = await sale.populate('user', 'name')
-        .populate('items.product', 'title price')
-        .execPopulate();
-        return sale;
-    }
+        console.log(userSale);
+        let condition = false;
+        if (!userSale) {
+            console.log('aqui');
+            return createSale(ctx.token.id, productId, quantity);
+        } else if (userSale.items.length < 1) {
+            console.log(userSale.items.length);
+            return createSale(ctx.token.id, productId, quantity);
+        } else {
+            console.log('update here');
+        }
+    },
 };
+
+const createSale = async(id, product, quantity) => {
+    let sale = await Sale.create({
+        user: id,
+        status: true,
+        items: {
+            product: product,
+            quantity: quantity
+        }
+    });
+    sale = await sale.populate('user', 'name')
+    .populate('items.product', 'title price')
+    .execPopulate();
+    return sale;
+}
+
+const updateSale = () => {
+
+}
 
 module.exports = {
 	Query,
