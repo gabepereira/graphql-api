@@ -14,33 +14,18 @@ const Query = {
 
 const Mutation = {
     createSale: async(_, { productId, quantity }, ctx, info) => {
-        let product = await Product.findById(productId);
+        const product = await Product.findById(productId);
         if (!product) throw new Error('Product not found');
-        console.log(productId);
         let userSale = await Sale.findOne({
             user: ctx.token.id,
-            status: true,
-        }, {
-            items: [{
-                $elemMatch: {
-                    product: {
-                        $exists: productId
-                    }
-                }
-            }]
+            status: true
         });
-        console.log(userSale);
-        let condition = false;
         if (!userSale) {
-            console.log('aqui');
             return createSale(ctx.token.id, productId, quantity);
-        } else if (userSale.items.length < 1) {
-            console.log(userSale.items.length);
-            return createSale(ctx.token.id, productId, quantity);
-        } else {
-            console.log('update here');
-        }
-    },
+        } else if (userSale) {
+            return updateSale(ctx.token.id, productId, quantity);
+        } else throw new Error('Error creating sale');
+    }
 };
 
 const createSale = async(id, product, quantity) => {
@@ -58,8 +43,28 @@ const createSale = async(id, product, quantity) => {
     return sale;
 }
 
-const updateSale = () => {
+const updateSale = async(id, product, quantity) => {
+    let sale = await Sale.findOne({
+        user: id,
+        status: true,
+        items: {
+            $elemMatch: { product: product }
+        }
+    });
+    sale = await sale.populate('user', 'name')
+    .execPopulate();
+    sale.items[0].quantity += quantity;
+    return await sale.updateOne(sale, () => sale);
+}
 
+const deactivateSale = async id => {
+    let sale = await Sale.findOneAndUpdate({
+        user: id,
+        status: true,
+    }, {
+        status: false
+    }, { new: true });
+    return sale;
 }
 
 module.exports = {
