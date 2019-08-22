@@ -16,15 +16,18 @@ const Mutation = {
     createSale: async(_, { productId, quantity }, ctx, info) => {
         const product = await Product.findById(productId);
         if (!product) throw new Error('Product not found');
-        let userSale = await Sale.findOne({
+        let sale = await Sale.findOne({
             user: ctx.token.id,
             status: true
         });
-        if (!userSale) {
-            return createSale(ctx.token.id, productId, quantity);
-        } else if (userSale) {
-            return updateSale(ctx.token.id, productId, quantity);
-        } else throw new Error('Error creating sale');
+        // if (!sale) {
+        //     return createSale(ctx.token.id, productId, quantity);
+        // } else if (sale) {
+        //     return updateSale(productId, quantity, sale);
+        // } else throw new Error('Error creating sale');
+        !sale ? createSale(ctx.token.id, productId, quantity) :
+        sale ? updateSale(productId, quantity, sale) :
+        new Error('Error creating sale');
     }
 };
 
@@ -43,18 +46,18 @@ const createSale = async(id, product, quantity) => {
     return sale;
 }
 
-const updateSale = async(id, product, quantity) => {
-    let sale = await Sale.findOne({
-        user: id,
-        status: true,
-        items: {
-            $elemMatch: { product: product }
-        }
+const updateSale = async(product, quantity, sale) => {
+    for (let i in sale.items) {
+        if (sale.items[i].product == product)
+        sale.items[i].quantity += quantity;
+    }
+    const found = sale.items.some(item => item.product == product);
+    if (!found) sale.items.push({
+        product: product,
+        quantity: quantity
     });
-    sale = await sale.populate('user', 'name')
-    .execPopulate();
-    sale.items[0].quantity += quantity;
-    return await sale.updateOne(sale, () => sale);
+    await sale.updateOne(sale, (err, doc) => 
+    err ? new Error('Could not update sale') : doc);
 }
 
 const deactivateSale = async id => {
